@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/Login">
+        <file>Icons/Login/bank_icon.png</file>
+        <file>Icons/Login/member_icon.jpg</file>
+        <file>Icons/Login/password_icon.png</file>
+        <file>Icons/Login/s_logo_icon_bank.png</file>
+        <file>Icons/Login/mountains-mountainous-layer-wallpaper.jpg</file>
+    </qresource>
+    <qresource prefix="/Other">
+        <file>Icons/OtherForms/visa-logo-png-2020.png</file>
+        <file>Icons/OtherForms/aboutIcon.png</file>
+        <file>Icons/OtherForms/aboutQTIcon.png</file>
+        <file>Icons/OtherForms/backtologin.png</file>
+        <file>Icons/OtherForms/quitIcon.jpeg</file>
+    </qresource>
+</RCC>
