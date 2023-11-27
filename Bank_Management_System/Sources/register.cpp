@@ -16,7 +16,6 @@ Register::Register(QWidget *parent) :
     login = new Login;
 
     this->setFixedSize(600, 480);
-    QSqlDatabase DB_Conn = Database::instance().getDatabase();
     //Change window title
     setWindowTitle("User Register");
     // Placeholder text
@@ -70,6 +69,9 @@ void Register::on_pushButton_Register_clicked()
     Country = ui->lineEdit_Country->text();
     Address = ui->textEdit_Address->toPlainText();
 
+    QSqlDatabase DB_Conn = Database::instance().getDatabase();
+
+
     // Turn on the device and this device generates random data based on programming or system.
     std::random_device rd;
     // Choose an algorithm for random number gen.I choose the Mersenne Twister Algorithm for the following reasons.
@@ -114,14 +116,12 @@ void Register::on_pushButton_Register_clicked()
     int CVV_Number = CVV(gen);
 
     // Create and set valid date.
-    QDate CurrentDate = QDate::currentDate();
-    QDate ValidDate = CurrentDate.addYears(3);
-
-    QString CurrentDateText = CurrentDate.toString("dd/MM/yyyy");
+    QDateTime date = QDateTime::currentDateTime();
+    QString dateFormat = date.toString("dd/MM/yyyy");
+    QDate ValidDate = date.date().addYears(3);
     QString ValidDateText = ValidDate.toString("MM/yyyy");
-
-
-    QSqlDatabase DB_Conn = Database::instance().getDatabase();
+    QString timeFormat = date.toString("hh:mm:ss");
+    QString FDateTime = dateFormat + " " + timeFormat;
 
     if(!Name.isEmpty() && !PhoneNumber.isEmpty() && !Email.isEmpty() && !Pass.isEmpty() && !Birth.isEmpty() && !City.isEmpty() &&
         !Country.isEmpty() && !Address.isEmpty())
@@ -137,11 +137,12 @@ void Register::on_pushButton_Register_clicked()
         else
         {
             QSqlQuery activity_Query;
-            activity_Query.prepare("INSERT INTO Activity(AccountNo, User_Email, Balance, Name, OpeningDate, MeterNo, SubsNo) VALUES(:accNo, :email, :balance, :name, CURRENT_TIMESTAMP,  :mNo, :sNo)");
+            activity_Query.prepare("INSERT INTO Activity(AccountNo, User_Email, Balance, Name, OpeningDate, MeterNo, SubsNo) VALUES(:accNo, :email, :balance, :name, :date,  :mNo, :sNo)");
             activity_Query.bindValue(":accNo", accNo);
             activity_Query.bindValue(":email", Email);
             activity_Query.bindValue(":balance",Balance);
             activity_Query.bindValue(":name",Name);
+            activity_Query.bindValue(":date",FDateTime);
             activity_Query.bindValue(":mNo", MeterNo);
             activity_Query.bindValue(":sNo",SubsNo);
 
@@ -153,7 +154,7 @@ void Register::on_pushButton_Register_clicked()
             card_Query.bindValue(":iban",IBAN);
             card_Query.bindValue(":cnumber",CardNumber);
             card_Query.bindValue(":cvv",CVV_Number);
-            card_Query.bindValue(":opdate",CurrentDateText);
+            card_Query.bindValue(":opdate",FDateTime);
             card_Query.bindValue(":vdate",ValidDateText);
 
             QSqlQuery register_Query;
@@ -178,11 +179,12 @@ void Register::on_pushButton_Register_clicked()
 
             QSqlQuery addLogQuery;
             addLogQuery.prepare("INSERT INTO Log(AccountNo, User_Email, Name, Status, OprDate, SubType)"
-                                "VALUES(:accNo, :email, :name, :status, CURRENT_TIMESTAMP, :subtype)");
+                                "VALUES(:accNo, :email, :name, :status, :OprDate, :subtype)");
             addLogQuery.bindValue(":accNo",accNo);
             addLogQuery.bindValue(":email",Email);
             addLogQuery.bindValue(":name",Name);
             addLogQuery.bindValue(":status","Account Created");
+            addLogQuery.bindValue(":OprDate",FDateTime);
             addLogQuery.bindValue(":subtype","-");
 
             if(activity_Query.exec() && card_Query.exec() && register_Query.exec() && login_Query.exec() && addLogQuery.exec())

@@ -22,8 +22,8 @@ Login::Login(QWidget *parent) :
     // Password mode set
     ui->lineEdit_Password->setEchoMode(QLineEdit::Password);
     // icons
-    QIcon user("C:/Users/xener1eza/Desktop/Bank_Management_Systems/Bank_Management_System/Icons/Login/member_icon");
-    QIcon pass("C:/Users/xener1eza/Desktop/Bank_Management_Systems/Bank_Management_System/Icons/Login/password_icon");
+    QIcon user("your_path/member_icon");
+    QIcon pass("your_path/password_icon");
     ui->lineEdit_User->addAction(user, QLineEdit::LeadingPosition);
     ui->lineEdit_Password->addAction(pass, QLineEdit::LeadingPosition);
 

@@ -18,6 +18,7 @@ public:
 private:
     Database(QObject *parent = nullptr);
     ~Database();
+    Database(const Database&) = delete;
     static QSqlDatabase DB_Conn;
 
 };
